@@ -21,7 +21,6 @@ def run_simulation(X_test, y_test, best_model, n_products=300,
     static_price = np.expm1(X_sim["log_act_price"].values) * 0.85
     cost         = np.expm1(X_sim["log_act_price"].values) * cost_rate
 
-    # ── Arrays für Ergebnisse ─────────────────────────────────────────────
     static_rev     = np.zeros(n_steps)
     dynamic_rev    = np.zeros(n_steps)
     static_margin  = np.zeros(n_steps)
@@ -29,15 +28,12 @@ def run_simulation(X_test, y_test, best_model, n_products=300,
 
     # ── Simulation ────────────────────────────────────────────────────────
     for t in range(n_steps):
-        # Marktvolatilität: ±3% tägliche Preisschwankung
         noise = np.random.normal(0, 0.03, n_products)
-        # Saisonalität: 14-Tage-Zyklus (Wochenend-/Sale-Effekte)
         demand_shock = 1 + 0.15 * np.sin(2 * np.pi * t / 14)
 
-        # Dynamic: Modell reagiert auf veränderte Marktbedingungen
         X_step = X_sim.copy()
         X_step["disc_pct"]    = (X_step["disc_pct"]    * (1 + noise)).clip(0, 90)
-        X_step["price_ratio"] = (X_step["price_ratio"] * (1 + noise * 0.5)).clip(0.3, 1.0)
+        #X_step["price_ratio"] = (X_step["price_ratio"] * (1 + noise * 0.5)).clip(0.3, 1.0)
         dynamic_pred = np.expm1(best_model.predict(X_step))
 
         # Nachfragefunktion: qty ∝ (Preis / Marktpreis)^(-1.5)
@@ -94,7 +90,6 @@ def run_simulation(X_test, y_test, best_model, n_products=300,
     results_df.to_csv(csv_path, index=False)
     print(f"[Simulation] ✓ CSV gespeichert: {csv_path}")
 
-    # ── Plots ─────────────────────────────────────────────────────────────
     _plot_revenue(steps, static_rev, dynamic_rev, rev_uplift, out_dir)
     _plot_margin(steps, static_margin, dynamic_margin, margin_uplift, out_dir)
     _plot_stability(steps, X_sim, y_sim, best_model, static_price,
@@ -103,7 +98,6 @@ def run_simulation(X_test, y_test, best_model, n_products=300,
     return results_df, summary
 
 
-# ── Private Plot-Funktionen ───────────────────────────────────────────────────
 
 def _plot_revenue(steps, static_rev, dynamic_rev, uplift, out_dir):
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -171,7 +165,7 @@ def _plot_stability(steps, X_sim, y_sim, best_model, static_price,
         noise = np.random.normal(0, 0.03, n_products)
         X_step = X_sim.copy()
         X_step["disc_pct"]    = (X_step["disc_pct"]    * (1 + noise)).clip(0, 90)
-        X_step["price_ratio"] = (X_step["price_ratio"] * (1 + noise * 0.5)).clip(0.3, 1.0)
+        #X_step["price_ratio"] = (X_step["price_ratio"] * (1 + noise * 0.5)).clip(0.3, 1.0)
         dyn_std.append(np.expm1(best_model.predict(X_step)).std())
 
     fig, ax = plt.subplots(figsize=(10, 4))

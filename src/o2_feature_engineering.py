@@ -10,7 +10,6 @@ FEATURES = [
     "rating_num",        # Produktbewertung  → endogen
     "log_rating_count",  # Popularität (log) → endogen
     "cat_enc",           # Kategorie         → exogen
-    "price_ratio",       # Preis-Ratio       → endogen
     "inv_proxy",         # Lagerbestand-Proxy→ endogen
 ]
 
@@ -27,9 +26,6 @@ def build_features(data: pd.DataFrame):
 
     le = LabelEncoder()
     df["cat_enc"] = le.fit_transform(df["main_cat"])
-
-    df["price_ratio"] = df["disc_price"] / df["act_price"]
-
     df["inv_proxy"] = 1 / (df["rating_count_num"] + 1) * 1000
 
     print(f"[Features] ✓ {len(FEATURES)} Features gebaut: {FEATURES}")

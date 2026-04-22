@@ -1,5 +1,6 @@
 
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import numpy as np
@@ -47,14 +48,12 @@ best_model = xgb_model if winner == xgb_label else rf
 best_res   = xgb_res   if winner == xgb_label else rf_res
 print(f"\n  ✓ Bestes Modell: {winner}")
 
-# Plots
 results = [rf_res, xgb_res]
 plot_model_comparison(results, OUT_DIR)
 plot_actual_vs_predicted(best_res, OUT_DIR)
 plot_feature_importance(rf, xgb_model, features, xgb_label, OUT_DIR)
 shap_ok = plot_shap(xgb_model, X_test, features, OUT_DIR)
 
-# Preistabelle
 price_table = build_price_table(df, X_test, y_test, best_model, features, n=50)
 csv_path = os.path.join(OUT_DIR, "preisempfehlungen.csv")
 price_table.to_csv(csv_path, index=False)
@@ -65,7 +64,6 @@ print(price_table.head(10).to_string(index=False))
 print("\n[5/5] Simulation …")
 sim_df, summary = run_simulation(X_test, y_test, best_model, out_dir=OUT_DIR)
 
-# ── Zusammenfassung ───────────────────────────────────────────────────────────
 print("\n" + "=" * 65)
 print("  ERGEBNISZUSAMMENFASSUNG")
 print("=" * 65)

@@ -9,14 +9,12 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-# ── Seiten-Config ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Dynamic Pricing Dashboard",
     page_icon="📊",
     layout="wide",
 )
 
-# ── Farben & Style ────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
     .metric-card {
@@ -34,7 +32,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ── Daten laden ───────────────────────────────────────────────────────────────
 @st.cache_data
 def load_data():
     price_csv = "outputs/preisempfehlungen.csv"
@@ -46,8 +43,8 @@ def load_data():
 
 
 @st.cache_resource
-def load_model():
-    path = "models/xgb_model.pkl"
+def load_model(model_name):
+    path = f"models/{model_name}"
     if os.path.exists(path):
         with open(path, "rb") as f:
             return pickle.load(f)
@@ -55,12 +52,18 @@ def load_model():
 
 
 price_df, sim_df = load_data()
-model = load_model()
+#model = load_model()
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
 st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
                  width=120)
 st.sidebar.title("")
+modell_wahl = st.sidebar.selectbox(
+    "🤖 Modell auswählen",
+    ["Random Forest", "XGBoost"]
+)
+model_file = "rf_model.pkl" if modell_wahl == "Random Forest" else "xgb_model.pkl"
+model = load_model(model_file)
+
 page = st.sidebar.radio("", [
     "🏠 Übersicht",
     "💰 Preisempfehlungen",

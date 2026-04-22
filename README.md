@@ -13,11 +13,11 @@ dynamic_pricing_project/
 │   └── amazon.csv
 │
 ├── src/
-│   ├── 01_data_pipeline.py        # Daten laden & bereinigen
-│   ├── 02_feature_engineering.py  # Features bauen
-│   ├── 03_train_models.py         # RF & XGBoost trainieren
-│   ├── 04_evaluation.py           # Metriken & Plots
-│   └── 05_simulation.py           # Dynamic vs. Statisch
+│   ├── o1_data_pipeline.py        # Daten laden & bereinigen
+│   ├── o2_feature_engineering.py  # Features bauen
+│   ├── o3_train_models.py         # RF & XGBoost trainieren
+│   ├── o4_evaluation.py           # Metriken & Plots
+│   └── o5_simulation.py           # Dynamic vs. Statisch
 │
 ├── models/                        # Gespeicherte Modelle (nach main.py)
 ├── outputs/                       # Plots & CSVs (nach main.py)

@@ -1,9 +1,3 @@
-"""
-04_evaluation.py
-─────────────────
-Berechnet MAE, RMSE, R² und erstellt alle Evaluations-Plots.
-Gibt außerdem eine Tabelle mit ursprünglichem vs. empfohlenem Preis zurück.
-"""
 
 import os
 import numpy as np
